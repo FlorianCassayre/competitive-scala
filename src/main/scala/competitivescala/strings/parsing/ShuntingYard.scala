@@ -1,4 +1,4 @@
-package algorithms.string.parsing
+package competitivescala.strings.parsing
 
 object ShuntingYard {
 

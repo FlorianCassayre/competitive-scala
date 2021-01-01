@@ -1,4 +1,4 @@
-package algorithms.graphs.bipartite
+package competitivescala.graphs.bipartite
 
 import org.scalatest.funsuite.AnyFunSuite
 

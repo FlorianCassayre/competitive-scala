@@ -1,4 +1,4 @@
-package algorithms.string
+package competitivescala.strings
 
 import org.scalatest.funsuite.AnyFunSuite
 

@@ -1,4 +1,4 @@
-package utils
+package competitivescala.utils
 
 object Vectors {
 

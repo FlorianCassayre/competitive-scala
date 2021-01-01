@@ -1,4 +1,4 @@
-package algorithms.string.parsing
+package competitivescala.strings.parsing
 
 import org.scalatest.funsuite.AnyFunSuite
 import ShuntingYard._
