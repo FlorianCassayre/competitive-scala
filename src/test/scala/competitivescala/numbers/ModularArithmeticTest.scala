@@ -68,4 +68,19 @@ class ModularArithmeticTest extends AnyFunSuite {
     assert(positiveMod(-3, 8) == 5)
     assert(positiveMod(-51, 16) == 13)
   }
+
+  test("miller-rabin primality test") {
+    def isPrime(n: BigInt): Boolean = millerRabinPrimalityTestBigInt(n, 200)
+    assert(!isPrime(BigInt(1)))
+    assert(isPrime(BigInt(2)))
+    assert(isPrime(BigInt(3)))
+    assert(!isPrime(BigInt(4)))
+    assert(isPrime(BigInt(5)))
+    assert(isPrime(BigInt(41)))
+    assert(!isPrime(BigInt(42)))
+    assert(isPrime(BigInt(43)))
+    assert(isPrime(BigInt(97)))
+    assert(!isPrime(BigInt("21897574116239148563")))
+    assert(isPrime(BigInt("662907566987488772370319039045404693994847")))
+  }
 }

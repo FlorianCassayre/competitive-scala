@@ -1,46 +1,48 @@
 package competitivescala.numbers
 
+import scala.util.Random
+
 object ModularArithmetic {
 
   def gcd[N](a: N, b: N)(implicit ev: Integral[N]): N = {
     import ev._
-    if (b == ev.zero) a.abs else gcd(b, a % b)
+    if (b == zero) a.abs else gcd(b, a % b)
   }
 
   def lcm[N](a: N, b: N)(implicit ev: Integral[N]): N = {
     import ev._
     val p = (a * b).abs
-    if (p == ev.zero) p else p / gcd(a, b)
+    if (p == zero) p else p / gcd(a, b)
   }
 
 
   // Returns (gcd(a, b), (u, v)) s.t. gcd(a, b) = a*u + b*v
   def gcdBezout[N](a: N, b: N)(implicit ev: Integral[N]): (N, (N, N)) = {
+    import ev._
     def iterate(rn: N, r: N, sn: N, s: N, tn: N, t: N): (N, (N, N)) = {
-      import ev._
-      if (r != ev.zero) {
+      if (r != zero) {
         val q = rn / r
         iterate(r, rn - q * r, s, sn - q * s, t, tn - q * t)
       } else {
         (rn, (sn, tn))
       }
     }
-    iterate(a, b, ev.one, ev.zero, ev.zero, ev.one)
+    iterate(a, b, one, zero, zero, one)
   }
 
 
   // Simpler version of the above
   def modularInverse[N](a: N, m: N)(implicit ev: Integral[N]): Option[N] = {
+    import ev._
     def iterate(tn: N, t: N, rn: N, r: N): Option[N] = {
-      import ev._
-      if (r != ev.zero) {
+      if (r != zero) {
         val q = rn / r
         iterate(t, tn - q * t, r, rn - q * r)
       } else {
-        if (rn > ev.one) None else Some(if (tn < ev.zero) tn + m else tn)
+        if (rn > one) None else Some(if (tn < zero) tn + m else tn)
       }
     }
-    iterate(ev.zero, ev.one, m, a)
+    iterate(zero, one, m, a)
   }
 
   // Solves for x: x = a(i) (mod n(i))
@@ -56,21 +58,99 @@ object ModularArithmetic {
         }
       case _ => Some(x)
     }
-    iterate(na, ev.zero)
+    iterate(na, zero)
   }
 
 
+  // Computes a^b mod m
   def exponent[N](a: N, b: N, m: N)(implicit ev: Integral[N]): N = {
     import ev._
-    val two = ev.one + ev.one
+    val two = one + one
     def iterate(y: N, x: N, n: N): N = {
-      if (n < ev.zero) throw new Exception // iterate(y, modularInverse(x, m).get, -n)
-      else if (n == ev.zero) y
-      else if (n == ev.one) (x * y) % m
-      else if (n % two == ev.zero) iterate(y, (x * x) % m, n / two)
+      if (n < zero) throw new Exception // iterate(y, modularInverse(x, m).get, -n)
+      else if (n == zero) y
+      else if (n == one) (x * y) % m
+      else if (n % two == zero) iterate(y, (x * x) % m, n / two)
       else iterate((x * y) % m, (x * x) % m, n / two)
     }
-    iterate(ev.one, a % m, b)
+    iterate(one, a % m, b)
+  }
+
+  // If false then the number is surely composite
+  // If true then it is prime with probability guaranteed at least 1 - 4^-k
+  def millerRabinPrimalityTest[N](n: N, k: Int)(randomSource: N => () => N)(implicit ev: Integral[N]): Boolean = {
+    import ev._
+    require(n > zero, k > 0)
+    val (two, three) = (fromInt(2), fromInt(3))
+    val nMinusOne = n - one
+    def factorTwo(number: N, count: N): (N, N) = {
+      if(number > zero && number % two == zero) {
+        factorTwo(number / two, count + one)
+      } else {
+        (number, count)
+      }
+    }
+    val (d, r) = factorTwo(n - one, zero)
+    val randomGenerator = randomSource(n - three)
+    def witness(i: Int): Boolean = {
+      if(i > 0) {
+        val a = randomGenerator() + two
+        val x = exponent(a, d, n)
+        if(x == one || x == nMinusOne) {
+          witness(i - 1)
+        } else {
+          def repeat(j: N, y: N): Boolean = {
+            if(j > one) { // r - 1 iterations
+              val y1 = exponent(y, two, n)
+              if(y1 == nMinusOne) {
+                true
+              } else {
+                repeat(j - one, y1)
+              }
+            } else {
+              false
+            }
+          }
+          if(repeat(r, x)) {
+            witness(i - 1)
+          } else {
+            false
+          }
+        }
+      } else {
+        true
+      }
+    }
+    if(n <= one) {
+      false
+    } else if(n <= three) {
+      true
+    } else if(n % two == zero || n % three == zero) { // Optional test
+      false
+    } else {
+      witness(k)
+    }
+  }
+
+  def millerRabinPrimalityTestBigInt(n: BigInt, k: Int): Boolean = {
+    val random = new Random()
+    def nextRandom(number: BigInt, bitLength: Int): BigInt = {
+      val next = BigInt(bitLength, random)
+      if(next < number) {
+        next
+      } else {
+        nextRandom(number, bitLength)
+      }
+    }
+    millerRabinPrimalityTest(n, k)(number => {
+      val bitLength = number.bitLength
+      () => nextRandom(number, bitLength)
+    })
+  }
+
+  def millerRabinPrimalityTestLong(n: Long, k: Int): Boolean = {
+    val random = new Random()
+    millerRabinPrimalityTest(n, k)(number => () => random.nextLong(number))
   }
 
 
