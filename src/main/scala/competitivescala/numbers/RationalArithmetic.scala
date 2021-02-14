@@ -3,16 +3,40 @@ package competitivescala.numbers
 object RationalArithmetic {
 
   sealed case class Rational[N] private (a: N, b: N)(implicit ev: Integral[N]) {
+    import ev._
+
     override def toString: String = s"$a/$b"
+
+    def toContinuedFraction: Seq[N] = {
+      def expand(x: Rational[N], acc: Seq[N]): Seq[N] = {
+        import scala.math.Fractional.Implicits.infixFractionalOps
+        if(x.b != one) {
+          val a = x.a / x.b // Floor division
+          expand(Rational.RationalFractional.one / (x - Rational(a)), a +: acc)
+        } else {
+          x.a +: acc
+        }
+      }
+      expand(this, Seq.empty).reverse
+    }
   }
 
   object Rational {
     def apply[N](a: N, b: N)(implicit ev: Integral[N]): Rational[N] = {
       import ev._
-      require(b != ev.zero)
-      def gcd(a: N, b: N): N = if (b == ev.zero) a.abs else gcd(b, a % b)
+      require(b != zero)
+      def gcd(a: N, b: N): N = if (b == zero) a.abs else gcd(b, a % b)
       val n = gcd(a, b)
-      new Rational(ev.sign(a * b) * a.abs / n, b.abs / n)
+      new Rational(sign(a * b) * a.abs / n, b.abs / n)
+    }
+
+    def apply[N](a: N)(implicit ev: Integral[N]): Rational[N] = apply(a, ev.one)
+
+    // c(0) + 1 / (c(1) + 1 / (c(2) + 1 / ...))
+    def fromContinuedFraction[N](coefficients: Seq[N])(implicit ev: Integral[N]): Rational[N] = {
+      import scala.math.Fractional.Implicits.infixFractionalOps
+      val one = Rational(ev.one)
+      coefficients.map(apply(_)).reduceRight((a, b) => a + one / b)
     }
 
     class RationalIntegral[N](implicit ev: Integral[N]) extends Fractional[Rational[N]] {
