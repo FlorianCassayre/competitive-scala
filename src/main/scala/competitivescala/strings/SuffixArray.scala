@@ -4,7 +4,7 @@ object SuffixArray {
 
   // Complexity: O(n log n)
   // Requires a injection between T and Ints
-  def sortSuffixes[T](seq: IndexedSeq[T])(implicit ord: Ordering[T], toInt: T => Int): IndexedSeq[Int] = {
+  def sortSuffixes[T](seq: IndexedSeq[T])(implicit toInt: T => Int): IndexedSeq[Int] = {
     val n = seq.size
     val indices = seq.indices
     def iteratePow(k: Int, array: IndexedSeq[Int], ranks: IndexedSeq[Int]): IndexedSeq[Int] = {
@@ -35,11 +35,11 @@ object SuffixArray {
         array
       }
     }
-    iteratePow(1, seq.indices.reverse.sortBy(seq), seq.map(toInt))
+    iteratePow(1, seq.indices.reverse.sortBy(seq.andThen(toInt)), seq.map(toInt))
   }
 
   // Complexity: O(n log n)
-  def burrowsWheelerTransform[T](seq: IndexedSeq[T])(implicit ord: Ordering[T], toInt: T => Int): (IndexedSeq[T], IndexedSeq[T]) = {
+  def burrowsWheelerTransform[T](seq: IndexedSeq[T])(implicit toInt: T => Int): (IndexedSeq[T], IndexedSeq[T]) = {
     val n = seq.size
     val sorted = sortSuffixes(seq)
     val plusLast = n +: sorted
@@ -48,14 +48,14 @@ object SuffixArray {
   }
 
   // Complexity: O(n log n)
-  def burrowsWheelerInverseTransform[T](seq1: IndexedSeq[T], seq2: IndexedSeq[T])(implicit ord: Ordering[T], toInt: T => Int): IndexedSeq[T] = {
+  def burrowsWheelerInverseTransform[T](seq1: IndexedSeq[T], seq2: IndexedSeq[T])(implicit toInt: T => Int): IndexedSeq[T] = {
     val all = seq1 ++ seq2
     if(all.nonEmpty) {
       def withRank(seq: Seq[T]): Seq[(T, Int)] =
         seq.foldLeft((Seq.empty[(T, Int)], Map.empty[T, Int].withDefault(_ => 0))) { case ((acc, map), e) =>
           ((e, map(e)) +: acc, map + (e -> (map(e) + 1)))
         }._1.reverse
-      val (first, last) = (withRank(all.sorted), withRank(all))
+      val (first, last) = (withRank(all.sortBy(toInt)), withRank(all))
       val m = seq1.size
       val mapFirstLast = (first.take(m - 1) ++ first.drop(m)).zip(last.tail).toMap
       def reconstruct(symbol: (T, Int), acc: Seq[T]): IndexedSeq[T] = mapFirstLast.get(symbol) match {
@@ -66,6 +66,37 @@ object SuffixArray {
     } else {
       IndexedSeq.empty
     }
+  }
+
+
+  // Complexity: O(n log n)
+  def sortRotations[T](seq: IndexedSeq[T])(implicit toInt: T => Int): IndexedSeq[Int] = {
+    val n = seq.size
+    val indices = seq.indices
+    def iteratePow(k: Int, array: IndexedSeq[Int], ranks: IndexedSeq[Int]): IndexedSeq[Int] = {
+      if(k < n) {
+        val hk = k / 2
+        val newRanks = indices.foldLeft(ranks)((currentRanks, i) =>
+          currentRanks.updated(array(i),
+            if(i > 0 &&
+              ranks(array(i - 1)) == ranks(array(i)) &&
+              ranks((array(i - 1) + hk) % n) == ranks((array(i) + hk) % n))
+              currentRanks(array(i - 1))
+            else
+              i
+          )
+        )
+        val (newArray, _) = indices.foldLeft((array, indices.toVector)) { case ((currentArray, currentCount), i) =>
+          val s = (array(i) - k + n) % n
+          val r = newRanks(s)
+          (currentArray.updated(currentCount(r), s), currentCount.updated(r, currentCount(r) + 1))
+        }
+        iteratePow(k * 2, newArray, newRanks)
+      } else {
+        array
+      }
+    }
+    iteratePow(1, seq.indices.sortBy(seq.andThen(toInt)), seq.map(toInt))
   }
 
 }
