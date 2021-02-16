@@ -1,7 +1,5 @@
 package competitivescala.numbers
 
-import scala.util.Random
-
 object ModularArithmetic {
 
   def gcd[N](a: N, b: N)(implicit ev: Integral[N]): N = {
@@ -80,7 +78,8 @@ object ModularArithmetic {
   // If true then it is prime with probability guaranteed at least 1 - 4^-k
   def millerRabinPrimalityTest[N](n: N, k: Int)(randomSource: N => () => N)(implicit ev: Integral[N]): Boolean = {
     import ev._
-    require(n > zero, k > 0)
+    require(n > zero)
+    require(k > 0)
     val (two, three) = (fromInt(2), fromInt(3))
     val nMinusOne = n - one
     def factorTwo(number: N, count: N): (N, N) = {
@@ -133,6 +132,7 @@ object ModularArithmetic {
   }
 
   def millerRabinPrimalityTestBigInt(n: BigInt, k: Int): Boolean = {
+    import scala.util.Random
     val random = new Random()
     def nextRandom(number: BigInt, bitLength: Int): BigInt = {
       val next = BigInt(bitLength, random)
@@ -149,6 +149,7 @@ object ModularArithmetic {
   }
 
   def millerRabinPrimalityTestLong(n: Long, k: Int): Boolean = {
+    import scala.util.Random
     val random = new Random()
     millerRabinPrimalityTest(n, k)(number => () => random.nextLong(number))
   }
