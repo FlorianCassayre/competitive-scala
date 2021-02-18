@@ -32,6 +32,7 @@ My personal repertoire of datastructures and utilities written in pure Scala.
   * Modular inverse, Bézout identity and Chinese remainder
   * Fast exponentiation
   * Randomized Miller-Rabin primality test
+  * Discrete logarithm
 * [Rational arithmetic](src/main/scala/competitivescala/numbers/RationalArithmetic.scala)
 
 #### Arrays, sequences and strings

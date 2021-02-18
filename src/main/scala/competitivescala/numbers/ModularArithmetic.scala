@@ -155,6 +155,50 @@ object ModularArithmetic {
   }
 
 
+  // Finds the smallest integer that is greater or equal to sqrt(n)
+  def ceiledSqrt[N](n: N)(implicit ev: Integral[N]): N = {
+    import ev._
+    require(n >= zero)
+    val two = one + one
+    def find(start: N, end: N, found: N): N = {
+      if(start <= end) {
+        val mid = (start + end) / two
+        val value = mid * mid
+        if(value >= n) {
+          find(start, mid - one, mid)
+        } else {
+          find(mid + one, end, found)
+        }
+      } else {
+        found
+      }
+    }
+    find(zero, n, n)
+  }
+
+  // Complexity and memory: Õ(sqrt(n))
+  // Finds x such that a^x = b
+  def babyStepGiantStep[N](a: N, b: N, n: N)(implicit ev: Integral[N]): Option[N] = {
+    import ev._
+    val m = ceiledSqrt(n)
+    val table = Seq.unfold(zero, one % n) { case (j, acc) => if(j < m) Some(acc -> j, (j + one, (acc * a) % n)) else None }.toMap
+    modularInverse(a, n).flatMap { ai =>
+      val am = exponent(ai, m, n)
+      def iterate(i: N, y: N): Option[N] = {
+        if(i < m) {
+          table.get(y) match {
+            case Some(j) => Some(i * m + j)
+            case None => iterate(i + one, (y * am) % n)
+          }
+        } else {
+          None
+        }
+      }
+      iterate(zero, b % n)
+    }
+  }
+
+
   def positiveMod[N](a: N, m: N)(implicit ev: Integral[N]): N = {
     import ev._
     ((a % m) + m) % m

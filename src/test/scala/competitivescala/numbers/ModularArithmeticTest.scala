@@ -83,4 +83,28 @@ class ModularArithmeticTest extends AnyFunSuite {
     assert(!isPrime(BigInt("21897574116239148563")))
     assert(isPrime(BigInt("662907566987488772370319039045404693994847")))
   }
+
+  test("ceiled square root") {
+    assert(ceiledSqrt(0) == 0)
+    assert(ceiledSqrt(1) == 1)
+    assert(ceiledSqrt(2) == 2)
+    assert(ceiledSqrt(3) == 2)
+    assert(ceiledSqrt(4) == 2)
+    assert(ceiledSqrt(5) == 3)
+    assert(ceiledSqrt(50) == 8)
+    assert(ceiledSqrt(99) == 10)
+  }
+
+  test("baby-step giant-step") {
+    assert(babyStepGiantStep(0, 0, 1).contains(0))
+    assert(babyStepGiantStep(0, 0, 2).isEmpty)
+    assert(babyStepGiantStep(2, 0, 3).isEmpty)
+    assert(babyStepGiantStep(4, 2, 5).isEmpty)
+    assert(babyStepGiantStep(2, 3, 5).contains(3))
+    assert(babyStepGiantStep(2, 3, 11).contains(8))
+    assert(babyStepGiantStep(2, 3, 11).contains(8))
+    assert(babyStepGiantStep(32174, 49111, 59351).contains(24059))
+    assert(babyStepGiantStep(227633941L, 29051987L, 83932133L).contains(34562833L))
+  }
+
 }
