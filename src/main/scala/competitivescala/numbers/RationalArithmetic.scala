@@ -1,5 +1,7 @@
 package competitivescala.numbers
 
+import java.math.MathContext
+
 object RationalArithmetic {
 
   sealed case class Rational[N] private (a: N, b: N)(implicit ev: Integral[N]) {
@@ -70,6 +72,10 @@ object RationalArithmetic {
   type BigRational = Rational[BigInt]
   def BigRational(numerator: BigInt, denominator: BigInt = 1): BigRational = Rational(numerator, denominator)
   val BigRationalFractional: Fractional[Rational[BigInt]] = Rational.RationalFractional[BigInt]
+
+  implicit class BigRationalWrapper(br: BigRational) {
+    def toBigDecimal(mc: MathContext): BigDecimal = BigDecimal(br.a, mc) / BigDecimal(br.b, mc)
+  }
 
   import scala.math.Fractional.Implicits.infixFractionalOps // Mandatory upon usage
 

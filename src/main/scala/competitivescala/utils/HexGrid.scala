@@ -15,9 +15,9 @@ object HexGrid {
     val northeast: HexPoint = HexPoint(y = 1, z = -1)
     val east: HexPoint = HexPoint(x = 1, z = -1)
     val southeast: HexPoint = HexPoint(x = 1, y = -1)
-    val southwest: HexPoint = HexPoint(y = -1, z = 1)
-    val west: HexPoint = HexPoint(x = -1, z = 1)
-    val northwest: HexPoint = HexPoint(x = -1, y = 1)
+    val southwest: HexPoint = -northeast
+    val west: HexPoint = -east
+    val northwest: HexPoint = -southeast
 
     val directions: Seq[HexPoint] = Seq(northeast, east, southeast, southwest, west, northwest)
   }

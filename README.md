@@ -3,9 +3,9 @@ competitive-scala
 
 My personal repertoire of datastructures and utilities written in pure Scala.
 
-* All implementations are pure, with the exception of randomized algorithms which rely on random number generator oracles.
+* All implementations are pure, with the exception of randomized algorithms which rely on an impure random number generator oracle.
 * All implementations are asymptotically optimal up to a `log^k(n)` factor. Most of the time the chosen algorithm is indeed optimal, however the operations on the underlying immutable datastructures may require additional time (compared to their impure counterpart), thus the log factor.
-* All implementations are self-contained: no external libraries are used and files are isolated of each other.
+* All implementations are self-contained: no external libraries are used and files are isolated from each other.
 
 ## Repertoire
 
@@ -18,7 +18,7 @@ My personal repertoire of datastructures and utilities written in pure Scala.
 * [Maximum bipartite matching (unweighted)](src/main/scala/competitivescala/graphs/bipartite/BipartiteMatchingUnweighted.scala)
 * [Minimum spanning tree (undirected)](src/main/scala/competitivescala/graphs/MinimumSpanningTree.scala)
 * [Shortest path](src/main/scala/competitivescala/graphs/ShortestPath.scala)
-  * Single source positive weight, optional early stopping (Dijkstra)
+  * Single source, positive weights, optional early stopping (Dijkstra)
   * Single source, negative weights and negative loop detection (Bellman-Ford)
 * [Topological sort](src/main/scala/competitivescala/graphs/TopologicalSort.scala)
 * [Union-find data structure](src/main/scala/competitivescala/graphs/UnionFind.scala)
