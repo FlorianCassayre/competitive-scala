@@ -27,6 +27,10 @@ My personal repertoire of datastructures and utilities written in pure Scala.
 
 * [Combinatorics](src/main/scala/competitivescala/numbers/Combinatorics.scala)
   * Count combinations and permutations
+* [Matrix arithmetic](src/main/scala/competitivescala/numbers/MatrixArithmetic.scala)
+  * Dimensions, identity and rotations
+  * Multiplication and element-wise operations
+  * Gaussian elimination and inverse
 * [Modular arithmetic](src/main/scala/competitivescala/numbers/ModularArithmetic.scala)
   * GCD and LCM
   * Modular inverse, Bézout identity and Chinese remainder
