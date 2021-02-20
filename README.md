@@ -57,4 +57,5 @@ My personal repertoire of datastructures and utilities written in pure Scala.
 * [Hexagonal grid](src/main/scala/competitivescala/utils/HexGrid.scala)
 * [Rhombic dodecahedral grid](src/main/scala/competitivescala/utils/RhombicDodecahedralGrid.scala)
 * [Roman numerals from/to integer](src/main/scala/competitivescala/utils/RomanNumerals.scala)
-* [Vectors (integrals)](src/main/scala/competitivescala/utils/Vectors.scala)
+* [State](src/main/scala/competitivescala/utils/State.scala)
+* [Vectors](src/main/scala/competitivescala/utils/Vectors.scala)
