@@ -5,34 +5,29 @@ import org.scalatest.funsuite.AnyFunSuite
 
 class UnionFindTest extends AnyFunSuite {
 
-  def actionUnion[B](x: Char, y: Char): Left[(Char, Char), B] = Left(x, y)
-  def actionFindExpect[A](x: Char, expectedY: Char): Right[A, (Char, Char)] = Right(x, expectedY)
+  def findExpect[U](x: U, expectedY: U): UnionFindState[U, U] = for {
+    y <- find(x)
+    _ = assert(y == expectedY)
+  } yield y
 
   test("union find") {
-    val operations = Seq(
-      actionFindExpect('a', 'a'),
-      actionUnion('a', 'b'),
-      actionFindExpect('a', 'a'),
-      actionFindExpect('b', 'a'),
-      actionUnion('c', 'd'),
-      actionFindExpect('d', 'c'),
-      actionUnion('a', 'c'),
-      actionFindExpect('d', 'a'),
-      actionFindExpect('c', 'a'),
-      actionFindExpect('b', 'a'),
-      actionUnion('b', 'e'),
-      actionFindExpect('e', 'a'),
-    )
+    val operations = for {
+      _ <- findExpect('a', 'a')
+      _ <- union('a', 'b')
+      _ <- findExpect('a', 'a')
+      _ <- findExpect('b', 'a')
+      _ <- union('c', 'd')
+      _ <- findExpect('d', 'c')
+      _ <- union('a', 'c')
+      _ <- findExpect('d', 'a')
+      _ <- findExpect('c', 'a')
+      _ <- findExpect('b', 'a')
+      _ <- union('b', 'e')
+      _ <- findExpect('e', 'a')
+      end <- UnionFindState.get
+    } yield end
 
-    operations.foldLeft((Map.empty[Char, Char], Map.empty[Char, Int])) { case ((forest, ranks), action) =>
-      action match {
-        case Left((x, y)) => union(x, y, forest, ranks)
-        case Right((x, expectedY)) =>
-          val (y, newForest) = find(x, forest)
-          assert(y == expectedY)
-          (newForest, ranks)
-      }
-    }
+    operations.run(InitialInternal)
   }
 
 }
