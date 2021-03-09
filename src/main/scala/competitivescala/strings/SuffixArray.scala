@@ -39,30 +39,22 @@ object SuffixArray {
   }
 
   // Complexity: O(n log n)
-  def burrowsWheelerTransform[T](seq: IndexedSeq[T])(implicit toInt: T => Int): (IndexedSeq[T], IndexedSeq[T]) = {
-    val n = seq.size
+  def burrowsWheelerTransform[T](seq: IndexedSeq[T])(implicit toInt: T => Int): (Int, IndexedSeq[T]) = {
     val sorted = sortSuffixes(seq)
-    val plusLast = n +: sorted
-    val index = plusLast.indexOf(0)
-    (plusLast.take(index).map(i => seq(i - 1)), plusLast.drop(index + 1).map(i => seq(i - 1)))
+    val n = seq.size
+    (sorted.indexOf(0), sorted.map(i => seq((i + n - 1) % n)))
   }
 
   // Complexity: O(n log n)
-  def burrowsWheelerInverseTransform[T](seq1: IndexedSeq[T], seq2: IndexedSeq[T])(implicit toInt: T => Int): IndexedSeq[T] = {
-    val all = seq1 ++ seq2
-    if(all.nonEmpty) {
+  def burrowsWheelerInverseTransform[T](index: Int, seq: IndexedSeq[T])(implicit toInt: T => Int): IndexedSeq[T] = {
+    if(seq.nonEmpty) {
       def withRank(seq: Seq[T]): Seq[(T, Int)] =
         seq.foldLeft((Seq.empty[(T, Int)], Map.empty[T, Int].withDefault(_ => 0))) { case ((acc, map), e) =>
           ((e, map(e)) +: acc, map + (e -> (map(e) + 1)))
         }._1.reverse
-      val (first, last) = (withRank(all.sortBy(toInt)), withRank(all))
-      val m = seq1.size
-      val mapFirstLast = (first.take(m - 1) ++ first.drop(m)).zip(last.tail).toMap
-      def reconstruct(symbol: (T, Int), acc: Seq[T]): IndexedSeq[T] = mapFirstLast.get(symbol) match {
-        case Some(next) => reconstruct(next, symbol._1 +: acc)
-        case None => (symbol._1 +: acc).toIndexedSeq
-      }
-      reconstruct(last.head, Seq.empty)
+      val last = withRank(seq)
+      val mapFirstLast = withRank(seq.sortBy(toInt)).zip(last).toMap
+      seq.foldLeft((last(index), Seq.empty[T])) { case ((symbol, acc), _) => (mapFirstLast(symbol), symbol._1 +: acc) }._2.toIndexedSeq
     } else {
       IndexedSeq.empty
     }

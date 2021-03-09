@@ -26,8 +26,8 @@ class SuffixArrayTest extends AnyFunSuite {
 
   test("burrows-wheeler roundtrip") {
     def testRoundtrip(string: String): Unit = {
-      val (seq1, seq2) = burrowsWheelerTransform(string)
-      val result = burrowsWheelerInverseTransform(seq1, seq2)
+      val (index, seq) = burrowsWheelerTransform(string)
+      val result = burrowsWheelerInverseTransform(index, seq)
       assert(result.mkString == string)
     }
 
@@ -38,6 +38,9 @@ class SuffixArrayTest extends AnyFunSuite {
     testRoundtrip("banana")
     testRoundtrip("mississippi")
     testRoundtrip("panamabananas")
+
+    assert(burrowsWheelerTransform("java") == (2, "vjaa".toIndexedSeq))
+    assert(burrowsWheelerTransform("panamabananas") == (11, "mnpbnnaaaaasa".toIndexedSeq))
   }
 
 }
