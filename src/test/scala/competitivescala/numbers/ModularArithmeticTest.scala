@@ -62,6 +62,14 @@ class ModularArithmeticTest extends AnyFunSuite {
     assert(exponent(37, 1536, 877) == 664)
   }
 
+  test("sum of powers") {
+    assert(sumPowers(5, 0, 13) == 1)
+    assert(sumPowers(7, 1, 97) == 8)
+    assert(sumPowers(9, 2, 97) == 91)
+    assert(sumPowers(2, 5, 100) == 63)
+    assert(sumPowers(3, 6, 1001) == 92)
+  }
+
   test("positive modulo") {
     assert(positiveMod(12, 7) == 5)
     assert(positiveMod(0, 9) == 0)

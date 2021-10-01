@@ -74,6 +74,12 @@ object ModularArithmetic {
     iterate(one, a % m, b)
   }
 
+  // Computes a^0+a^1+a^2+...+a^k mod m
+  def sumPowers[N](a: N, k: N, m: N)(implicit ev: Integral[N]): N = {
+    import ev._
+    ((exponent(a, k + one, m) - one) * modularInverse(a - one, m).get) % m
+  }
+
   // If false then the number is surely composite
   // If true then it is prime with probability guaranteed at least 1 - 4^-k
   def millerRabinPrimalityTest[N](n: N, k: Int)(randomSource: N => () => N)(implicit ev: Integral[N]): Boolean = {
