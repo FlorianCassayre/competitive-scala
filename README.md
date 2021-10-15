@@ -44,7 +44,10 @@ My personal repertoire of datastructures and utilities written in pure Scala.
 * [Arithmetic expression parser (shunting-yard)](src/main/scala/competitivescala/strings/parsing/ShuntingYard.scala)
 * [JSON parser (recursive)](src/main/scala/competitivescala/strings/parsing/JsonParser.scala)
 * [Run-length encoding/decoding](src/main/scala/competitivescala/strings/RunLength.scala)
-* [String searching (Knuth-Morris-Pratt)](src/main/scala/competitivescala/strings/StringSearch.scala)
+* [String searching](src/main/scala/competitivescala/strings/StringSearch.scala)
+  * Longest prefix also a suffix
+  * Knuth-Morris-Pratt (KMP) search
+  * Palindrome search
 * [Suffixes](src/main/scala/competitivescala/strings/SuffixArray.scala)
   * Suffix array
   * Burrows-Wheeler transform and its inverse

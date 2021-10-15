@@ -25,4 +25,15 @@ class StringSearchTest extends AnyFunSuite {
     assert(searchStringKMP("ABC", "DEFG") == Seq())
   }
 
+  test("palindrome search") {
+    assert(searchPalindromesOddManacher("") == IndexedSeq.empty)
+    assert(searchPalindromesEvenManacher("") == IndexedSeq.empty)
+    assert(searchPalindromesOddManacher("aa") == IndexedSeq(1, 1))
+    assert(searchPalindromesEvenManacher("aa") == IndexedSeq(0, 1))
+    assert(searchPalindromesOddManacher("ababc") == IndexedSeq(1, 2, 2, 1, 1))
+    assert(searchPalindromesEvenManacher("ababc") == IndexedSeq(0, 0, 0, 0, 0))
+    assert(searchPalindromesOddManacher("ababbac") == IndexedSeq(1, 2, 2, 1, 1, 1, 1))
+    assert(searchPalindromesEvenManacher("ababbac") == IndexedSeq(0, 0, 0, 0, 2, 0, 0))
+  }
+
 }

@@ -50,4 +50,32 @@ object StringSearch {
     build(1, 0, IndexedSeq.fill(size + 1)(0).updated(0, -1))
   }
 
+
+  // Complexity: O(n)
+  def searchPalindromesOddManacher[A](string: IndexedSeq[A]): IndexedSeq[Int] = {
+    val n = string.size
+    string.indices.foldLeft((IndexedSeq.fill(n)(0), 0, -1)) { case ((d1, l, r), i) =>
+      def forward(k: Int): Int = if(k <= i && i + k < n && string(i - k) == string(i + k)) forward(k + 1) else k
+      val k = if(i > r) 1 else Math.min(d1(l + r - i), r - i + 1)
+      val k1 = forward(k)
+      val k2 = k1 - 1
+      val (l1, r1) = if(i + k2 > r) (i - k2, i + k2) else (l, r)
+      (d1.updated(i, k1), l1, r1)
+    }._1
+  }
+
+
+  // Complexity: O(n)
+  def searchPalindromesEvenManacher[A](string: IndexedSeq[A]): IndexedSeq[Int] = {
+    val n = string.size
+    string.indices.foldLeft((IndexedSeq.fill(n)(0), 0, -1)) { case ((d2, l, r), i) =>
+      def forward(k: Int): Int = if(k <= i - 1 && i + k < n && string(i - k - 1) == string(i + k)) forward(k + 1) else k
+      val k = if(i > r) 0 else Math.min(d2(l + r - i + 1), r - i + 1)
+      val k1 = forward(k)
+      val k2 = k1 - 1
+      val (l1, r1) = if(i + k2 > r) (i - k2 - 1, i + k2) else (l, r)
+      (d2.updated(i, k1), l1, r1)
+    }._1
+  }
+
 }
