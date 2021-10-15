@@ -34,7 +34,7 @@ My personal repertoire of datastructures and utilities written in pure Scala.
 * [Modular arithmetic](src/main/scala/competitivescala/numbers/ModularArithmetic.scala)
   * GCD and LCM
   * Modular inverse, Bézout identity and Chinese remainder
-  * Fast exponentiation
+  * Fast exponentiation, sum of powers
   * Randomized Miller-Rabin primality test
   * Discrete logarithm
 * [Rational arithmetic](src/main/scala/competitivescala/numbers/RationalArithmetic.scala)
@@ -49,6 +49,7 @@ My personal repertoire of datastructures and utilities written in pure Scala.
   * Suffix array
   * Burrows-Wheeler transform and its inverse
   * Rotation array
+  * Longest common prefix (LCP) array
 
 #### Other utilities
 

@@ -91,4 +91,24 @@ object SuffixArray {
     iteratePow(1, seq.indices.sortBy(seq.andThen(toInt)), seq.map(toInt))
   }
 
+  def longestCommonPrefixArray[T](seq: IndexedSeq[T])(implicit toInt: T => Int): IndexedSeq[Int] =
+    longestCommonPrefixArray(seq, sortSuffixes(seq))
+
+  // Complexity: O(n log n) for efficiency in this implementation; O(n) theoretically
+  def longestCommonPrefixArray[T](seq: IndexedSeq[T], suffixArray: IndexedSeq[Int]): IndexedSeq[Int] = {
+    val n = suffixArray.size
+    val rank = suffixArray.zipWithIndex.sortBy(_._1).map(_._2)
+    seq.indices.foldLeft((IndexedSeq.fill(n)(0), 0)) { case ((lcp, k), i) =>
+      if(rank(i) == n - 1) {
+        (lcp, k)
+      } else {
+        val r = rank(i)
+        val j = suffixArray(r + 1)
+        def forward(k: Int): Int = if(i + k < n && j + k < n && seq(i + k) == seq(j + k)) forward(k + 1) else k
+        val k1 = forward(k)
+        (lcp.updated(r, k1), if(k1 > 0) k1 - 1 else k1)
+      }
+    }._1
+  }
+
 }

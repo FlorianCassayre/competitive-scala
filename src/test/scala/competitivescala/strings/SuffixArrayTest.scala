@@ -12,7 +12,7 @@ class SuffixArrayTest extends AnyFunSuite {
     assert(sortSuffixes("ba") == IndexedSeq(1, 0))
     assert(sortSuffixes("aaa") == IndexedSeq(2, 1, 0))
     assert(sortSuffixes("banana") == IndexedSeq(5, 3, 1, 0, 4, 2))
-    println(sortSuffixes("baobab") == IndexedSeq(4, 1, 5, 3, 0, 2))
+    assert(sortSuffixes("baobab") == IndexedSeq(4, 1, 5, 3, 0, 2))
   }
 
   test("cyclic array") {
@@ -41,6 +41,13 @@ class SuffixArrayTest extends AnyFunSuite {
 
     assert(burrowsWheelerTransform("java") == (2, "vjaa".toIndexedSeq))
     assert(burrowsWheelerTransform("panamabananas") == (11, "mnpbnnaaaaasa".toIndexedSeq))
+  }
+
+  test("kasai longest common prefix array") {
+    assert(longestCommonPrefixArray("") == IndexedSeq.empty)
+    assert(longestCommonPrefixArray("a") == IndexedSeq(0))
+    assert(longestCommonPrefixArray("banana") == IndexedSeq(1, 3, 0, 0, 2, 0))
+    assert(longestCommonPrefixArray("mississippi") == IndexedSeq(1, 1, 4, 0, 0, 1, 0, 2, 1, 3, 0))
   }
 
 }
