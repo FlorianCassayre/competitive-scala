@@ -64,7 +64,6 @@ object StringSearch {
     }._1
   }
 
-
   // Complexity: O(n)
   def searchPalindromesEvenManacher[A](string: IndexedSeq[A]): IndexedSeq[Int] = {
     val n = string.size
@@ -76,6 +75,15 @@ object StringSearch {
       val (l1, r1) = if(i + k2 > r) (i - k2 - 1, i + k2) else (l, r)
       (d2.updated(i, k1), l1, r1)
     }._1
+  }
+
+  def searchPalindromesPrefixManacher[A](string: IndexedSeq[A]): IndexedSeq[Int] = {
+    val (d1, d2) = (searchPalindromesOddManacher(string), searchPalindromesEvenManacher(string))
+    d1.zip(d2).zipWithIndex.foldRight(IndexedSeq.fill(string.size)(1)) { case (((e1, e2), i), acc) =>
+      val (i1, i2) = (i - e1 + 1, i - e2)
+      val acc1 = if(e1 > 1) acc.updated(i1, Math.max(2 * e1 - 1, acc(i1))) else acc
+      if(e2 > 0) acc1.updated(i2, Math.max(2 * e2, acc1(i2))) else acc1
+    }.scanLeft(1)((acc, e) => Math.max(acc - 2, e)).tail
   }
 
 }
