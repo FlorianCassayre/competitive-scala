@@ -28,7 +28,7 @@ My personal repertoire of datastructures and utilities written in pure Scala.
 * [Combinatorics](src/main/scala/competitivescala/numbers/Combinatorics.scala)
   * Count combinations and permutations
 * [Fast Fourier transform (FFT)](src/main/scala/competitivescala/numbers/FFT.scala)
-  * Transformation and inverse transformation
+  * Transformation and its inverse
   * Convolution
 * [Matrix arithmetic](src/main/scala/competitivescala/numbers/MatrixArithmetic.scala)
   * Dimensions, identity and rotations
