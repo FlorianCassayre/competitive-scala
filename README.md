@@ -61,12 +61,13 @@ My personal repertoire of datastructures and utilities written in pure Scala.
 
 * [Binary search](src/main/scala/competitivescala/utils/BinarySearch.scala)
   * Binary search and its four variants
-* [Hexagonal grid](src/main/scala/competitivescala/utils/HexGrid.scala)
-* [Fixed point and orbit](src/main/scala/competitivescala/utils/FixedPoint.scala)
-* [Memoization](src/main/scala/competitivescala/utils/Memoization.scala)
-* [Rhombic dodecahedral grid](src/main/scala/competitivescala/utils/RhombicDodecahedralGrid.scala)
-* [Roman numerals from/to integer](src/main/scala/competitivescala/utils/RomanNumerals.scala)
-* [State](src/main/scala/competitivescala/utils/State.scala)
 * [Cartesian coordinates](src/main/scala/competitivescala/utils/Vectors.scala)
   * Points and vectors
   * Axis-aligned bounding boxes (AABB)
+* [Fixed point and orbit](src/main/scala/competitivescala/utils/FixedPoint.scala)
+* [Hexagonal grid](src/main/scala/competitivescala/utils/HexGrid.scala)
+* [Memoization](src/main/scala/competitivescala/utils/Memoization.scala)
+* [Rhombic dodecahedral grid](src/main/scala/competitivescala/utils/RhombicDodecahedralGrid.scala)
+* [Roman numerals from/to integer](src/main/scala/competitivescala/utils/RomanNumerals.scala)
+* [SAT solving (DPLL)](src/main/scala/competitivescala/utils/SAT.scala)
+* [State](src/main/scala/competitivescala/utils/State.scala)
