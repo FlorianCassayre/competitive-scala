@@ -4,31 +4,32 @@ object ShortestPath {
 
   // Complexity: O((E + V) * log V)
   // Weights must be positive
-  def shortestPathDijkstra[U, N](adjacency: Map[U, Set[(U, N)]], source: U, earlyStopping: Set[U] = Set.empty[U])(implicit ev: Numeric[N]): (Map[U, N], Map[U, U]) = {
+  def shortestPathDijkstra[U, N](adjacency: U => Set[(U, N)], source: U, earlyStopping: Set[U] = Set.empty[U])(implicit ev: Numeric[N]): (Map[U, N], Map[U, U]) = {
     import ev._
     import scala.collection.immutable.TreeSet
-    def search(queue: TreeSet[(U, N)], distances: Map[U, N], predecessors: Map[U, U], visited: Set[U]): (Map[U, N], Map[U, U]) = {
+    def search(queue: TreeSet[(U, (N, Int))], distances: Map[U, N], predecessors: Map[U, U], visited: Set[U], k: Int): (Map[U, N], Map[U, U]) = {
       queue.headOption match {
-        case Some((u, du)) =>
+        case Some((u, (du, _))) =>
           if(earlyStopping.contains(u)) {
             (distances, predecessors)
           } else if(!visited.contains(u)) {
             val newVisited = visited + u
-            val edges = adjacency.getOrElse(u, Set.empty).filter { case (b, w) => !visited.contains(b) && (!distances.contains(b) || distances(b) > du + w) }
-            val (newQueue, newDistances, newPredecessors) = edges.foldLeft((queue, distances, predecessors)) { case ((currentQueue, currentDistances, currentPredecessors), (v, w)) =>
+            val edges = adjacency(u).filter { case (b, w) => !visited.contains(b) && (!distances.contains(b) || distances(b) > du + w) }
+            val (newQueue, newDistances, newPredecessors, newK) = edges.foldLeft((queue.tail, distances, predecessors, k)) { case ((currentQueue, currentDistances, currentPredecessors, currentK), (v, w)) =>
               val newDistance = du + w
-              (currentDistances.get(v).map(dv => currentQueue - ((v, dv))).getOrElse(currentQueue) + ((v, newDistance)),
+              (currentQueue + (v -> (newDistance, currentK)),
                 currentDistances - v + (v -> newDistance),
-                currentPredecessors + (v -> u))
+                currentPredecessors + (v -> u),
+                currentK + 1)
             }
-            search(newQueue, newDistances, newPredecessors, newVisited)
+            search(newQueue, newDistances, newPredecessors, newVisited, newK)
           } else {
-            search(queue.tail, distances, predecessors, visited)
+            search(queue.tail, distances, predecessors, visited, k)
           }
         case None => (distances, predecessors)
       }
     }
-    search(TreeSet((source, zero))(Ordering.by(_._2)), Map(source -> zero), Map.empty, Set.empty)
+    search(TreeSet((source, (zero, 0)))(Ordering.by(_._2)), Map(source -> zero), Map.empty, Set.empty, 1)
   }
 
 
