@@ -70,4 +70,8 @@ My personal repertoire of datastructures and utilities written in pure Scala.
 * [Rhombic dodecahedral grid](src/main/scala/competitivescala/utils/RhombicDodecahedralGrid.scala)
 * [Roman numerals from/to integer](src/main/scala/competitivescala/utils/RomanNumerals.scala)
 * [SAT solving (DPLL)](src/main/scala/competitivescala/utils/SAT.scala)
+* [Space filling curves](src/main/scala/competitivescala/utils/SpaceFillingCurves.scala)
+  * Binary index curve
+  * Gray code curve
+  * Hilbert curve
 * [State](src/main/scala/competitivescala/utils/State.scala)
